@@ -22,6 +22,16 @@ public class Maze : MonoBehaviour {
 					mazeMatrix[i,j] = 0; // То это пустая КЛЕТКА
 				else mazeMatrix[i,j] = 1; // Иначе это СТЕНА
 			}
+		}outp();
+	}
+
+	void outp() {
+		string o = "";
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++)
+				o += mazeMatrix[i, j] + " ";
+			o += "\n";
 		}
+		Debug.Log(o);
 	}
 }

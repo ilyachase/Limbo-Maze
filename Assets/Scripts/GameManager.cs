@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour {
 		if (GameObject.Find("Maze") == null) {
 			mazeInstance = Instantiate(mazePrefab) as Maze;
 			mazeInstance.name = "Maze";
+			
+			// Выставляем камеру
+			var cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+			cam.transform.position = new Vector3(mazeInstance.width * 0.49f, mazeInstance.height * 0.5f, -10);
+			cam.orthographicSize = mazeInstance.width * 0.58f;
 		}
 	}
 }

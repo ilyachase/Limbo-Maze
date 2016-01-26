@@ -7,6 +7,10 @@ public class Maze : MonoBehaviour {
 
 	private byte[,] mazeMatrix; // Матрица лабиринта; 0 - непосещенная ячейка, 1 - стенка, 2 - посещенная ячейка
 
+	public MazeCell cellPrefab;
+
+	private MazeCell[,] cells;
+
 	// Структура клетки
 	private struct cell {
 		public int x, y;
@@ -20,6 +24,25 @@ public class Maze : MonoBehaviour {
 	// При инстанциации, лабиринт должен генирироваться
 	void Start () {
 		GenerateMaze();
+		InstantiateMaze();
+	}
+
+	// Создаем физическое отображение лабиринта
+	private void InstantiateMaze() {
+		cells = new MazeCell[width, height];
+
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
+				if (mazeMatrix[y, x] == 1)
+					CreateCell(x, y);
+	}
+
+	private void CreateCell(int x, int y) {
+		MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
+		cells[x, y] = newCell;
+		newCell.name = "Maze Cell " + x + ", " + y;
+		newCell.transform.parent = transform;
+		newCell.transform.localPosition = new Vector2(x, height-y);
 	}
 
 	// Возвращает массив непосещенных соседей клетки

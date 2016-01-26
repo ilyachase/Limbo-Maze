@@ -73,14 +73,25 @@ public class Maze : MonoBehaviour {
 
 		// Непосредственно генерация лабиринта методом поиска в глубину
 		int unvisitedCells = ((width-2) / 2 + 1) * ((height - 2) / 2 + 1); // Кол-во непосещенных ячеек
-		var currentCell = new cell(1, 1); // Начальная ячейка
+		var currentCell = new cell(width / 2, height / 2); // Начальная ячейка
+		bool first = true;
+		int rand;
+
 		mazeMatrix[currentCell.y, currentCell.x] = 2; // Начальная ячейка - посещенная
 		unvisitedCells--;
 		do {
 			var neighbours = getNeighbours(currentCell); // Получаем соседей текущей точки
 			if (neighbours.Count > 0) { // Если есть соседи
 				goodCells.Push(currentCell);
-				int rand = Random.Range(0, neighbours.Count);
+
+				// Первую ячейку выбираем верхней от центра
+				if (first) {
+					rand = 0;
+					first = false;
+				}
+				else
+					rand = Random.Range(0, neighbours.Count);
+
 				removeWall(currentCell, neighbours[rand]);
 				currentCell = neighbours[rand];
 				mazeMatrix[currentCell.y, currentCell.x] = 2;

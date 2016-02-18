@@ -125,9 +125,7 @@ public class Maze : MonoBehaviour {
 			}
 		}
 		while (unvisitedCells > 0);
-
-		outp();
-	}
+    }
 
 	void outp() {
 		string o = "";

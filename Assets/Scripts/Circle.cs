@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CircleMove : MonoBehaviour {
+public class Circle : MonoBehaviour {
+    public Maze mazePrefab; // reference на prefab лабиринта
     public float speed = 0.3f;
     Vector2 dest = Vector2.zero;
 
-    // Осторожно, быдлокод в методе
+    // Помещаем персонажа в центр лабиринта
     void Start() {
-        transform.position = new Vector2(15f, 16f);
+        transform.position = new Vector2(mazePrefab.width / 2, mazePrefab.height / 2 + 1);
         dest = transform.position;
 
         // Устанавливаем персонажа в центр лабиринта

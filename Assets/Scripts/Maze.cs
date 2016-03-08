@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Maze : MonoBehaviour {
 	public int width, height; // Ширина и высота лабиринта
 
-	private byte[,] mazeMatrix; // Матрица лабиринта; 0 - непосещенная ячейка, 1 - стенка, 2 - посещенная ячейка
+	public byte[,] mazeMatrix; // Матрица лабиринта; 0 - непосещенная ячейка, 1 - стенка, 2 - посещенная ячейка
 
 	public MazeCell cellPrefab;
 
@@ -40,9 +40,9 @@ public class Maze : MonoBehaviour {
 	private void CreateCell(int x, int y) {
 		MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
 		cells[x, y] = newCell;
-		newCell.name = "Maze Cell " + x + ", " + y;
+		newCell.name = "Maze Cell " + y + ", " + x;
 		newCell.transform.parent = transform;
-		newCell.transform.localPosition = new Vector2(x, height-y);
+		newCell.transform.localPosition = new Vector2(x, y);
 	}
 
 	// Возвращает массив непосещенных соседей клетки

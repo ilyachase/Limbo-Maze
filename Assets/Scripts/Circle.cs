@@ -8,7 +8,7 @@ public class Circle : MonoBehaviour {
 
     // Помещаем персонажа в центр лабиринта
     void Start() {
-        transform.position = new Vector2(mazePrefab.width / 2, mazePrefab.height / 2 + 1);
+        transform.position = new Vector2(mazePrefab.width / 2, mazePrefab.height / 2);
         dest = transform.position;
 
         // Устанавливаем персонажа в центр лабиринта
@@ -35,7 +35,6 @@ public class Circle : MonoBehaviour {
     }
 
     bool valid(Vector2 dir) {
-        // Cast Line from 'next to Pac-Man' to 'Pac-Man'
         Vector2 pos = transform.position;
         RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
         return (hit.collider == GetComponent<Collider2D>());

@@ -3,8 +3,8 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 	public Maze mazePrefab; // reference на prefab лабиринта
-
     public Circle circlePrefab;  // reference на prefab персонажа
+	public Goal goalPrefab;
 
     private Maze mazeInstance; // instance лабиринта
 
@@ -27,6 +27,10 @@ public class GameManager : MonoBehaviour {
             // Создаем персонажа
             var circle = Instantiate(circlePrefab) as Circle;
             circle.name = "Circle";
+
+			// Создаем цель
+			var goal = Instantiate(goalPrefab) as Goal;
+			goal.name = "Goal";
 
             // Выставляем камеру
             var cam = GameObject.Find("Main Camera").GetComponent<Camera>();

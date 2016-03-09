@@ -52,15 +52,11 @@ public class Goal : MonoBehaviour {
 
 		FindGoalCoordinates(ref x, ref y);
 		transform.position = new Vector2(x, y);
-		var dest = transform.position;
-
-		// Устанавливаем цель
-		Vector2 p = Vector2.MoveTowards(transform.position, dest, 10);
-		GetComponent<Rigidbody2D>().MovePosition(p);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	void OnTriggerEnter2D(Collider2D co) {
+		if (co.name == "Circle") {
+
+		}
 	}
 }

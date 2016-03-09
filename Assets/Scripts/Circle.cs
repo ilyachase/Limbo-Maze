@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Circle : MonoBehaviour {
     public Maze mazePrefab; // reference на prefab лабиринта
+	public Goal goalPrefab;
     public float speed = 0.3f;
     Vector2 dest = Vector2.zero;
 
@@ -36,7 +37,8 @@ public class Circle : MonoBehaviour {
 
     bool valid(Vector2 dir) {
         Vector2 pos = transform.position;
-        RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
-        return (hit.collider == GetComponent<Collider2D>());
+		RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
+		var hitname = hit.collider.gameObject.name;
+		return (hitname == "Circle") || (hitname == "Goal");
     }
 }

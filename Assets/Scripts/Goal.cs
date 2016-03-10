@@ -54,9 +54,9 @@ public class Goal : MonoBehaviour {
 		transform.position = new Vector2(x, y);
 	}
 
+	// Переходим на следующий уровень, если нас достиг персонаж
 	void OnTriggerEnter2D(Collider2D co) {
-		if (co.name == "Circle") {
-
-		}
+		if (co.name == "Circle")
+			GameObject.Find("Game Manager").GetComponent<GameManager>().GoNextLevel();
 	}
 }

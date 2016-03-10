@@ -11,6 +11,19 @@ public class GameManager : MonoBehaviour {
 	public Goal goalInstance;
 	private byte level = 1; // Текущий уровень
 
+	void EndGame() {
+		DeleteAll();
+		Debug.Log("Game ended!");
+	}
+
+	void DeleteAll() {
+		var cells = FindObjectsOfType(typeof(MazeCell)) as MazeCell[];
+		foreach (var cell in cells)
+			Destroy(cell.gameObject);
+		Destroy(GameObject.Find("Goal"));
+		Destroy(GameObject.Find("Circle"));
+	}
+
 	// Точка вхождения игры
 	void Update () {
 		// По нажатию пробела запускаем игру
@@ -60,12 +73,13 @@ public class GameManager : MonoBehaviour {
 	public void GoNextLevel() {
 		level++;
 
+		if (level == 9) {
+			EndGame();
+			return;
+		}
+
 		// Удаляем всё
-		var cells = FindObjectsOfType(typeof(MazeCell)) as MazeCell[];
-		foreach (var cell in cells)
-			Destroy(cell.gameObject);
-		Destroy(GameObject.Find("Goal"));
-		Destroy(GameObject.Find("Circle"));
+		DeleteAll();
 
 		// И пересоздаем
 		mazeInstance.InstantiateMaze(level);

@@ -2,19 +2,15 @@
 using System.Collections;
 
 public class Circle : MonoBehaviour {
-    public Maze mazePrefab; // reference на prefab лабиринта
 	public Goal goalPrefab;
     public float speed = 0.3f;
     Vector2 dest = Vector2.zero;
 
     // Помещаем персонажа в центр лабиринта
     void Start() {
-        transform.position = new Vector2(mazePrefab.width / 2, mazePrefab.height / 2);
+		var maze = GameObject.Find("Maze").GetComponent<Maze>();
+		transform.position = new Vector2(maze.width / 2, maze.height / 2);
         dest = transform.position;
-
-        // Устанавливаем персонажа в центр лабиринта
-        Vector2 p = Vector2.MoveTowards(transform.position, dest, 10);
-        GetComponent<Rigidbody2D>().MovePosition(p);
     }
 
     void FixedUpdate() {

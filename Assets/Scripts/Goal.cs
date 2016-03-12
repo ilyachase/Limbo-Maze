@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Goal : MonoBehaviour {
 	// Нахождение координат для постановки цели
 	// Смысл - вставляем цель вплотную к внешней границе, но в любое свободное место из этой границы
-	void FindGoalCoordinates(ref int x, ref int y) {
+	public void FindGoalCoordinates(ref int x, ref int y, byte depth = 0) {
 		Maze maze = GameObject.Find("Maze").GetComponent<Maze>();
 
 		bool found = false;
@@ -17,26 +17,26 @@ public class Goal : MonoBehaviour {
 			switch (side) {
 				// Верхняя
 				case 1:
-					y = 1;
-					x = Random.Range(1, maze.width - 2);
+					y = 1 + depth;
+					x = Random.Range(1 + depth, maze.width - 2 - depth);
 				break;
 
 				// Правая
 				case 2:
-					y = Random.Range(1, maze.height - 2);
-					x = maze.width - 2;
+					y = Random.Range(1 + depth, maze.height - 2 - depth);
+					x = maze.width - 1 - depth;
 				break;
 
 				// Нижняя
 				case 3:
-					y = maze.height - 2;
-					x = Random.Range(1, maze.width - 2);
+					y = maze.height - 1 - depth;
+					x = Random.Range(1 + depth, maze.width - 2 - depth);
 				break;
 
 				// Левая
 				case 4:
-					y = Random.Range(1, maze.height - 2);
-					x = 1;
+					y = Random.Range(1 + depth, maze.height - 2 - depth);
+					x = 1 + depth;
 				break;
 			}
 

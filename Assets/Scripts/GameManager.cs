@@ -5,11 +5,16 @@ public class GameManager : MonoBehaviour {
 	public Maze mazePrefab; // reference на prefab лабиринта
     public Circle circlePrefab;  // reference на prefab персонажа
 	public Goal goalPrefab;
+	public Bonus1 bonus1Prefab;
+	public Bonus2 bonus2Prefab;
+	public Bonus3 bonus3Prefab;
 
-    private Maze mazeInstance; // instance лабиринта
+	private Maze mazeInstance; // instance лабиринта
 	public Circle circleInstance;  // reference на prefab персонажа
 	public Goal goalInstance;
 	private byte level = 1; // Текущий уровень
+
+	private const bool debug_c = true;
 
 	void EndGame() {
 		DeleteAll();
@@ -17,11 +22,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void DeleteAll() {
-		var cells = FindObjectsOfType(typeof(MazeCell)) as MazeCell[];
-		foreach (var cell in cells)
-			Destroy(cell.gameObject);
-		Destroy(GameObject.Find("Goal"));
-		Destroy(GameObject.Find("Circle"));
+		foreach (GameObject o in FindObjectsOfType<GameObject>())
+			if ((o.name != "Game Manager") && (o.name != "Main Camera") && (o.name != "Maze"))
+				Destroy(o);
 	}
 
 	// Точка вхождения игры
@@ -30,6 +33,10 @@ public class GameManager : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			StartGame();
 		}
+
+		// По нажатию пробела запускаем игру
+		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
+			GoNextLevel();
 	}
 
 	void SetUpCam() {
@@ -69,6 +76,29 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+	void CreateBonus(byte num, byte depth = 0) {
+		if (num == 1) {
+			var b1 = Instantiate(bonus1Prefab) as Bonus1;
+			b1.InstantiateBonus(depth);
+			b1.name = "Bonus1";
+		}
+		else if (num == 2) {
+			var b2 = Instantiate(bonus2Prefab) as Bonus2;
+			b2.InstantiateBonus(depth);
+			b2.name = "Bonus2";
+		}
+		else {
+			var b3 = Instantiate(bonus3Prefab) as Bonus3;
+			b3.InstantiateBonus(depth);
+			b3.name = "Bonus3";
+		}
+	}
+
+	void CreateMaze(byte level) {
+		mazeInstance.InstantiateMaze(level);
+		mazeInstance.name = "Maze";
+	}
+
 	// Переход на следующий уровень
 	public void GoNextLevel() {
 		level++;
@@ -82,9 +112,26 @@ public class GameManager : MonoBehaviour {
 		DeleteAll();
 
 		// И пересоздаем
-		mazeInstance.InstantiateMaze(level);
+		CreateMaze(level);
 		CreateCircle();
 		CreateGoal();
+
+		// Если нужно, расставляем бонусы
+		if (level >= 4) {
+			CreateBonus(1, 5);
+			if (level >= 5) {
+				CreateBonus(1, 8);
+				CreateBonus(2, 5);
+			}
+			if (level >= 6) {
+				CreateBonus(1, 8);
+				CreateBonus(2, 8);
+				CreateBonus(3, 5);
+			}
+			if (level > 6) {
+				CreateBonus(3, 8);
+			}
+		}
 
 		// Выставляем камеру
 		SetUpCam();

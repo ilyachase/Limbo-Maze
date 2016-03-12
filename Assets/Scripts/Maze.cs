@@ -11,7 +11,6 @@ public class Maze : MonoBehaviour {
 	private List<byte[,]> Levels = new List<byte[,]>(); // Массив матриц уровней
 	private byte base_sum = 7;
 
-
 	// Структура клетки
 	private struct cell {
 		public int x, y;

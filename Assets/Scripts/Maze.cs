@@ -78,9 +78,13 @@ public class Maze : MonoBehaviour {
 	}
 
 	// Генерация лабиринта
-	public void GenerateLevels () {
+	public void GenerateLevels (bool regenerate_current = false, byte level = 0) {
 		// Генерируем 8 уровней
+
 		for (int lev = 1; lev <= 8; lev++) {
+			if (regenerate_current)
+				lev = level;
+
 			width = height = base_sum + lev * 4;
 
 			var mazeTemp = new byte[width, height];
@@ -124,6 +128,11 @@ public class Maze : MonoBehaviour {
 				}
 			}
 			while (unvisitedCells > 0);
+
+			if (regenerate_current) {
+				Levels[level - 1] = mazeTemp;
+				return;
+			}
 
 			Levels.Add(mazeTemp);
 		}

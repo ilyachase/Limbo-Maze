@@ -10,12 +10,11 @@ public class GameManager : MonoBehaviour {
 	public Bonus3 bonus3Prefab;
 	public Counter counterPrefab;
 	public Canvas canvasPrefab;
-
-	private Maze mazeInstance; // instance лабиринта
 	public Circle circleInstance;  // reference на prefab персонажа
 	public Goal goalInstance;
-	private byte level = 1; // Текущий уровень
+	public byte level = 1; // Текущий уровень
 
+	private Maze mazeInstance; // instance лабиринта
 	private const bool debug_c = true;
 
 	void EndGame() {
@@ -56,14 +55,38 @@ public class GameManager : MonoBehaviour {
 		goalInstance.name = "Goal";
 	}
 
+	void CreateBonuses() {
+		// Если нужно, расставляем бонусы
+		if (level >= 4) {
+			CreateBonus(1, 5);
+			if (level >= 5) {
+				CreateBonus(1, 8);
+				CreateBonus(2, 5);
+			}
+			if (level >= 6) {
+				CreateBonus(1, 11);
+				CreateBonus(2, 8);
+				CreateBonus(3, 5);
+			}
+			if (level >= 7) {
+				CreateBonus(2, 11);
+				CreateBonus(3, 8);
+			}
+			if (level >= 8) {
+				CreateBonus(3, 11);
+			}
+		}
+	}
+
 	// Запуск игры
-	void CreateAll(bool generate = false) {
-		CreateMaze(generate);
+	void CreateAll(bool generate = false, bool regenerate_current = false) {
+		CreateMaze(generate, regenerate_current);
 		CreateCircle();
 		CreateGoal();
+		CreateBonuses();
 		CreateCounter();
 		SetUpCam();
-    }
+	}
 
 	void CreateBonus(byte num, byte depth = 0) {
 		if (num == 1) {
@@ -83,10 +106,13 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void CreateMaze(bool generate = false) {
+	void CreateMaze(bool generate = false, bool regenerate_current = false) {
 		if (generate) {
 			mazeInstance = Instantiate(mazePrefab) as Maze;
-			mazeInstance.GenerateLevels();
+			mazeInstance.GenerateLevels(regenerate_current);
+		}
+		else if (regenerate_current) {
+			mazeInstance.GenerateLevels(regenerate_current, level);
 		}
 
 		mazeInstance.InstantiateMaze(level);
@@ -113,26 +139,16 @@ public class GameManager : MonoBehaviour {
 		// И пересоздаем
 		CreateAll();
 
-		// Если нужно, расставляем бонусы
-		if (level >= 4) {
-			CreateBonus(1, 5);
-			if (level >= 5) {
-				CreateBonus(1, 8);
-				CreateBonus(2, 5);
-			}
-			if (level >= 6) {
-				CreateBonus(1, 11);
-				CreateBonus(2, 8);
-				CreateBonus(3, 5);
-			}
-			if (level >= 7) {
-				CreateBonus(2, 11);
-				CreateBonus(3, 8);
-			}
-			if (level >= 8) {
-				CreateBonus(3, 11);
-			}
-		}
+		// Выставляем камеру
+		SetUpCam();
+	}
+
+	public void RestartLevel() {
+		// Удаляем всё
+		DeleteAll();
+
+		// И пересоздаем
+		CreateAll(false, true);
 
 		// Выставляем камеру
 		SetUpCam();

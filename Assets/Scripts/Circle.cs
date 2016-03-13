@@ -34,7 +34,6 @@ public class Circle : MonoBehaviour {
     bool valid(Vector2 dir) {
         Vector2 pos = transform.position;
 		RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
-		var hitname = hit.collider.gameObject.name;
-		return (hitname == "Circle") || (hitname == "Goal");
+		return (hit.collider.gameObject.tag != "Wall");
     }
 }

@@ -124,12 +124,16 @@ public class GameManager : MonoBehaviour {
 				CreateBonus(2, 5);
 			}
 			if (level >= 6) {
-				CreateBonus(1, 8);
+				CreateBonus(1, 11);
 				CreateBonus(2, 8);
 				CreateBonus(3, 5);
 			}
-			if (level > 6) {
+			if (level >= 7) {
+				CreateBonus(2, 11);
 				CreateBonus(3, 8);
+			}
+			if (level >= 8) {
+				CreateBonus(3, 11);
 			}
 		}
 

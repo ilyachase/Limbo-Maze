@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour {
 	public Bonus1 bonus1Prefab;
 	public Bonus2 bonus2Prefab;
 	public Bonus3 bonus3Prefab;
+	public Counter counterPrefab;
+	public Canvas canvasPrefab;
 
 	private Maze mazeInstance; // instance лабиринта
 	public Circle circleInstance;  // reference на prefab персонажа
@@ -30,9 +32,8 @@ public class GameManager : MonoBehaviour {
 	// Точка вхождения игры
 	void Update () {
 		// По нажатию пробела запускаем игру
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			StartGame();
-		}
+		if ((Input.GetKeyDown(KeyCode.Space)) && (GameObject.Find("Maze") == null))
+			CreateAll(true);
 
 		// По нажатию пробела запускаем игру
 		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
@@ -56,24 +57,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// Запуск игры
-	void StartGame() {
-		// Если лабиринта ещё нет, инстанциируем его
-		if (GameObject.Find("Maze") == null) {
-            // Создаем лабиринт
-			mazeInstance = Instantiate(mazePrefab) as Maze;
-			mazeInstance.GenerateLevels();
-			mazeInstance.InstantiateMaze(level);
-			mazeInstance.name = "Maze";
-
-			// Создаем персонажа
-			CreateCircle();
-
-			// Создаем цель
-			CreateGoal();
-
-			// Выставляем камеру
-			SetUpCam();
-        }
+	void CreateAll(bool generate = false) {
+		CreateMaze(generate);
+		CreateCircle();
+		CreateGoal();
+		CreateCounter();
+		SetUpCam();
     }
 
 	void CreateBonus(byte num, byte depth = 0) {
@@ -94,9 +83,19 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void CreateMaze(byte level) {
+	void CreateMaze(bool generate = false) {
+		if (generate) {
+			mazeInstance = Instantiate(mazePrefab) as Maze;
+			mazeInstance.GenerateLevels();
+		}
+
 		mazeInstance.InstantiateMaze(level);
 		mazeInstance.name = "Maze";
+	}
+
+	void CreateCounter() {
+		var canvas = Instantiate(canvasPrefab) as Canvas;
+		canvas.name = "Canvas";
 	}
 
 	// Переход на следующий уровень
@@ -112,9 +111,7 @@ public class GameManager : MonoBehaviour {
 		DeleteAll();
 
 		// И пересоздаем
-		CreateMaze(level);
-		CreateCircle();
-		CreateGoal();
+		CreateAll();
 
 		// Если нужно, расставляем бонусы
 		if (level >= 4) {

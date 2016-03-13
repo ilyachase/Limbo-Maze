@@ -84,7 +84,11 @@ public class GameManager : MonoBehaviour {
 		CreateCircle();
 		CreateGoal();
 		CreateBonuses();
-		CreateCounter();
+		if (!debug_c)
+			CreateCounter();
+		else {
+			CreateBonus(3);
+		}
 		SetUpCam();
 	}
 

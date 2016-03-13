@@ -13,4 +13,13 @@ public class Bonus3 : MonoBehaviour {
 
 		transform.position = new Vector2(x, y);
 	}
+
+	// Возможность пройти через стенку, зажав шифт
+	void OnTriggerEnter2D(Collider2D co) {
+		if (co.name == "Circle") {
+			var cir = GameObject.Find("Circle").GetComponent<Circle>();
+			cir.AddBonus(3);
+			Destroy(gameObject);
+		}
+	}
 }

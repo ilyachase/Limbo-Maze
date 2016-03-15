@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour {
 		if (!debug_c)
 			CreateCounter();
 		else {
-			CreateBonus(3);
+			CreateBonus(1);
 		}
 		SetUpCam();
 	}

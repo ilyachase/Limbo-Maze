@@ -9,6 +9,7 @@ public class Circle : MonoBehaviour {
 	bool have_b1 = false, have_b2 = false, have_b3 = false;
 	bool blocked = false;
 	Vector2 dest = Vector2.zero;
+	float ghost_time = 0;
 
 	// Помещаем персонажа в центр лабиринта
 	void Start() {
@@ -20,15 +21,27 @@ public class Circle : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		if (ghost_time > 0) {
+			ghost_time -= Time.deltaTime;
+			if (ghost_time <= 0)
+				speed = 0.3f;
+		}
+
 		// Move closer to Destination
 		Vector2 p = Vector2.MoveTowards(transform.position, dest, speed);
 		GetComponent<Rigidbody2D>().MovePosition(p);
 
 		// Активация бонусов
 		if (Input.GetKey(KeyCode.LeftShift)) {
+			// Первый бонус
+			if (have_b1) {
+				ghost_time = 5f;
+				speed = 0.5f;
+			}
+
 			// Третий бонус
 			// Если вместе с шифтом нажата стрелка, есть бонус
-			if (((Input.GetKey(KeyCode.UpArrow)) || (Input.GetKey(KeyCode.RightArrow)) || (Input.GetKey(KeyCode.DownArrow)) || (Input.GetKey(KeyCode.LeftArrow))) && (have_b3)) {
+			else if (((Input.GetKey(KeyCode.UpArrow)) || (Input.GetKey(KeyCode.RightArrow)) || (Input.GetKey(KeyCode.DownArrow)) || (Input.GetKey(KeyCode.LeftArrow))) && (have_b3)) {
 				Vector2 new_dest = dest;
 
 				// Если уперлись в стену, то пытаемся пройти через одну тонкую стенку

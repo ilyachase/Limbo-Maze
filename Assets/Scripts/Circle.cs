@@ -9,6 +9,7 @@ public class Circle : MonoBehaviour {
 	bool have_b1 = false, have_b2 = false, have_b3 = false;
 	Vector2 dest = Vector2.zero;
 	float ghost_time = 0;
+	bool blocked = false;
 
 	// Помещаем персонажа в центр лабиринта
 	void Start() {
@@ -20,6 +21,9 @@ public class Circle : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		if (blocked)
+			return;
+
 		if (ghost_time > 0) {
 			ghost_time -= Time.deltaTime;
 			if (ghost_time <= 0)
@@ -106,5 +110,19 @@ public class Circle : MonoBehaviour {
 			have_b2 = true;
 		else
 			have_b3 = true;
+	}
+
+	public void Block() {
+		if (!blocked)
+			blocked = true;
+	}
+
+	public void Unblock() {
+		if (blocked)
+			blocked = false;
+	}
+
+	public void Move(Vector2 new_dest) {
+		dest = new_dest;
 	}
 }

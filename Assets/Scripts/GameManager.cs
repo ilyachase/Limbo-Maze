@@ -22,10 +22,17 @@ public class GameManager : MonoBehaviour {
 		Debug.Log("Game ended!");
 	}
 
-	void DeleteAll() {
-		foreach (GameObject o in FindObjectsOfType<GameObject>())
-			if ((o.name != "Game Manager") && (o.name != "Main Camera") && (o.name != "Maze"))
-				Destroy(o);
+	void DeleteAll(bool dynamically = false) {
+		if (dynamically) {
+			foreach (GameObject o in FindObjectsOfType<GameObject>())
+				if ((o.name != "Game Manager") && (o.name != "Main Camera") && (o.name != "Maze") && (o.name != "Circle"))
+					Destroy(o);
+		}
+		else {
+			foreach (GameObject o in FindObjectsOfType<GameObject>())
+				if ((o.name != "Game Manager") && (o.name != "Main Camera") && (o.name != "Maze"))
+					Destroy(o);
+		}
 	}
 
 	// Точка вхождения игры
@@ -79,9 +86,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// Запуск игры
-	void CreateAll(bool generate = false, bool regenerate_current = false) {
-		CreateMaze(generate, regenerate_current);
-		CreateCircle();
+	void CreateAll(bool generate = false, bool regenerate_current = false, bool dynamically = false) {
+		CreateMaze(generate, regenerate_current, dynamically);
+		if (!dynamically)
+			CreateCircle();
 		CreateGoal();
 		CreateBonuses();
 		CreateCounter();
@@ -106,13 +114,13 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void CreateMaze(bool generate = false, bool regenerate_current = false) {
+	void CreateMaze(bool generate = false, bool regenerate_current = false, bool dynamically = false) {
 		if (generate) {
 			mazeInstance = Instantiate(mazePrefab) as Maze;
 			mazeInstance.GenerateLevels(regenerate_current);
 		}
 		else if (regenerate_current) {
-			mazeInstance.GenerateLevels(regenerate_current, level);
+			mazeInstance.GenerateLevels(regenerate_current, level, dynamically);
 		}
 
 		mazeInstance.InstantiateMaze(level);
@@ -143,12 +151,18 @@ public class GameManager : MonoBehaviour {
 		SetUpCam();
 	}
 
-	public void RestartLevel() {
+	public void RestartLevel(bool dynamically = false) {
+		if (dynamically)
+			circleInstance.Block();
+
 		// Удаляем всё
-		DeleteAll();
+		DeleteAll(dynamically);
 
 		// И пересоздаем
-		CreateAll(false, true);
+		CreateAll(false, true, dynamically);
+
+		if (dynamically)
+			circleInstance.Unblock();
 
 		// Выставляем камеру
 		SetUpCam();

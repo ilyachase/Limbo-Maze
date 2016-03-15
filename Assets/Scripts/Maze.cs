@@ -7,9 +7,10 @@ public class Maze : MonoBehaviour {
 	public byte[,] mazeMatrix; // Матрица лабиринта; 0 - непосещенная ячейка, 1 - стенка, 2 - посещенная ячейка
 	public MazeCell cellPrefab;
 
-	private MazeCell[,] cells;
-	private List<byte[,]> Levels = new List<byte[,]>(); // Массив матриц уровней
-	private byte base_sum = 7;
+	MazeCell[,] cells;
+	List<byte[,]> Levels = new List<byte[,]>(); // Массив матриц уровней
+	byte base_sum = 7;
+	Circle circleInstance;
 
 	// Структура клетки
 	private struct cell {
@@ -78,9 +79,15 @@ public class Maze : MonoBehaviour {
 	}
 
 	// Генерация лабиринта
-	public void GenerateLevels (bool regenerate_current = false, byte level = 0) {
-		// Генерируем 8 уровней
+	public void GenerateLevels (bool regenerate_current = false, byte level = 0, bool dynamically = false) {
+		int c_x = 0, c_y = 0;
+		if (dynamically) {
+			circleInstance = GameObject.Find("Circle").GetComponent<Circle>();
+			c_x = (int)circleInstance.transform.position.x;
+			c_y = (int)circleInstance.transform.position.y;
+		}
 
+		// Генерируем 8 уровней
 		for (int lev = 1; lev <= 8; lev++) {
 			if (regenerate_current)
 				lev = level;
@@ -129,12 +136,19 @@ public class Maze : MonoBehaviour {
 			}
 			while (unvisitedCells > 0);
 
-			if (regenerate_current) {
+			if (dynamically) {
+				if (mazeTemp[c_y, c_x] != 1) {
+					Levels[level - 1] = mazeTemp;
+					circleInstance.Move(new Vector2(c_x, c_y));
+					return;
+				}
+			}
+			else if (regenerate_current) {
 				Levels[level - 1] = mazeTemp;
 				return;
 			}
-
-			Levels.Add(mazeTemp);
+			else
+				Levels.Add(mazeTemp);
 		}
     }
 

@@ -44,8 +44,13 @@ public class Counter : MonoBehaviour {
 		counter.text = sec_s + ":" + mil_s;
 
 		// Если лимит исчерпан, перезапускаем уровень
-		if (sec >= cur_lvl_limit)
-			gmRef.RestartLevel();
+		if (sec >= cur_lvl_limit) {
+			// Для 6-8 уровней не рестартим, а динамически изменяем лабиринт
+			if (gmRef.level >= 6)
+				gmRef.RestartLevel(true);
+			else
+				gmRef.RestartLevel();
+		}
 	}
 
 	public void ActiveteBonus2() {

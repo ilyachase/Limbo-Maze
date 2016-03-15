@@ -13,9 +13,17 @@ public class GameManager : MonoBehaviour {
 	public Circle circleInstance;  // reference на prefab персонажа
 	public Goal goalInstance;
 	public byte level = 1; // Текущий уровень
+	public AudioClip[] Soundtracks;
+	AudioSource audio;
 
 	private Maze mazeInstance; // instance лабиринта
 	private const bool debug_c = true;
+
+	void Start() {
+		audio = GetComponent<AudioSource>();
+		audio.volume = 0;
+		audio.PlayOneShot(Soundtracks[3]);
+	}
 
 	void EndGame() {
 		DeleteAll();
@@ -37,11 +45,16 @@ public class GameManager : MonoBehaviour {
 
 	// Точка вхождения игры
 	void Update () {
+		if (!audio.isPlaying) {
+			audio.PlayOneShot(Soundtracks[Random.Range(0, Soundtracks.Length - 1)]);
+		}
+		if (audio.volume < 1)
+			FadeIn();
+
 		// По нажатию пробела запускаем игру
 		if ((Input.GetKeyDown(KeyCode.Space)) && (GameObject.Find("Maze") == null))
 			CreateAll(true);
-
-		// По нажатию пробела запускаем игру
+		
 		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
 			GoNextLevel();
 	}
@@ -166,5 +179,13 @@ public class GameManager : MonoBehaviour {
 
 		// Выставляем камеру
 		SetUpCam();
+	}
+
+	void FadeIn() {
+		audio.volume += 0.1f * Time.deltaTime;
+	}
+
+	void FadeOut() {
+		audio.volume += 0.1f * Time.deltaTime;
 	}
 }

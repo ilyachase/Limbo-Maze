@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 	public Maze mazePrefab; // reference на prefab лабиринта
@@ -13,17 +14,9 @@ public class GameManager : MonoBehaviour {
 	public Circle circleInstance;  // reference на prefab персонажа
 	public Goal goalInstance;
 	public byte level = 1; // Текущий уровень
-	public AudioClip[] Soundtracks;
-	AudioSource audio;
 
 	private Maze mazeInstance; // instance лабиринта
 	private const bool debug_c = true;
-
-	void Start() {
-		audio = GetComponent<AudioSource>();
-		audio.volume = 0;
-		audio.PlayOneShot(Soundtracks[3]);
-	}
 
 	void EndGame() {
 		DeleteAll();
@@ -31,26 +24,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void DeleteAll(bool dynamically = false) {
-		if (dynamically) {
-			foreach (GameObject o in FindObjectsOfType<GameObject>())
-				if ((o.name != "Game Manager") && (o.name != "Main Camera") && (o.name != "Maze") && (o.name != "Circle"))
-					Destroy(o);
-		}
-		else {
-			foreach (GameObject o in FindObjectsOfType<GameObject>())
-				if ((o.name != "Game Manager") && (o.name != "Main Camera") && (o.name != "Maze"))
-					Destroy(o);
-		}
+		List<string> protected_names = new List<string>(new string[] { "Game Manager", "Main Camera", "Maze", "Audio Player", "Screen Fader", "Canvas", "Fader" });
+		if (dynamically)
+			protected_names.Add("Circle");
+		foreach (GameObject o in FindObjectsOfType<GameObject>())
+			if (!protected_names.Contains(o.name))
+				Destroy(o);
 	}
 
 	// Точка вхождения игры
 	void Update () {
-		if (!audio.isPlaying) {
-			audio.PlayOneShot(Soundtracks[Random.Range(0, Soundtracks.Length - 1)]);
-		}
-		if (audio.volume < 1)
-			FadeIn();
-
 		// По нажатию пробела запускаем игру
 		if ((Input.GetKeyDown(KeyCode.Space)) && (GameObject.Find("Maze") == null))
 			CreateAll(true);
@@ -179,13 +162,5 @@ public class GameManager : MonoBehaviour {
 
 		// Выставляем камеру
 		SetUpCam();
-	}
-
-	void FadeIn() {
-		audio.volume += 0.1f * Time.deltaTime;
-	}
-
-	void FadeOut() {
-		audio.volume += 0.1f * Time.deltaTime;
 	}
 }

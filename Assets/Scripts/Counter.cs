@@ -3,20 +3,29 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Counter : MonoBehaviour {
-	private GameManager gmRef;
-	private int mil = 0, sec = 0;
-	private int cur_lvl_limit;
+	GameManager gmRef;
+	int mil = 0, sec = 0;
+	int cur_lvl_limit;
+	float slow_time = 0;
+	bool skip = false;
 
 	// Use this for initialization
 	void Start () {
 		gmRef = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
 		// Вычисление лимита времени на текующий уровень
-		cur_lvl_limit = gmRef.level * 3;
+		cur_lvl_limit = 1 + gmRef.level * 3;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (slow_time > 0) {
+			slow_time -= Time.deltaTime;
+			skip = !skip;
+			if (skip)
+				return;
+		}
+
 		var counter = GetComponent<Text>();
 
 		string mil_s = (mil < 10) ? "0" : "";
@@ -37,5 +46,9 @@ public class Counter : MonoBehaviour {
 		// Если лимит исчерпан, перезапускаем уровень
 		if (sec >= cur_lvl_limit)
 			gmRef.RestartLevel();
+	}
+
+	public void ActiveteBonus2() {
+		slow_time = 5f;
 	}
 }

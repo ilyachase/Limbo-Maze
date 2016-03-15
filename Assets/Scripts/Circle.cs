@@ -7,7 +7,6 @@ public class Circle : MonoBehaviour {
 	public Maze mazeInstance;
 
 	bool have_b1 = false, have_b2 = false, have_b3 = false;
-	bool blocked = false;
 	Vector2 dest = Vector2.zero;
 	float ghost_time = 0;
 
@@ -37,6 +36,14 @@ public class Circle : MonoBehaviour {
 			if (have_b1) {
 				ghost_time = 5f;
 				speed = 0.5f;
+				have_b1 = false;
+			}
+
+			// Второй бонус
+			else if (have_b2) {
+				var c = GameObject.Find("Counter").GetComponent<Counter>();
+				c.ActiveteBonus2();
+				have_b2 = false;
 			}
 
 			// Третий бонус

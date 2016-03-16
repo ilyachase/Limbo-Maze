@@ -28,12 +28,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void DeleteAll(bool dynamically = false) {
-		List<string> protected_names = new List<string>(new string[] { "Game Manager", "Main Camera", "Maze", "Audio Player", "Screen Fader", "Fader", "Canvas" });
-		if (dynamically)
-			protected_names.Add("Circle");
 		foreach (GameObject o in FindObjectsOfType<GameObject>())
-			if (!protected_names.Contains(o.name))
+			if (o.tag != "Protected") {
+				if ((dynamically) && (o.name == "Circle"))
+					continue;
 				Destroy(o);
+			}
 	}
 
 	// Точка вхождения игры

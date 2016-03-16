@@ -18,8 +18,8 @@ public class Counter : MonoBehaviour {
 		transform.SetParent(GameObject.Find("Canvas").transform);
 		var tr = transform as RectTransform;
 		tr.pivot = new Vector2(0, 0);
-		tr.localScale = new Vector2(1, 1);
-		tr.anchoredPosition = new Vector2(30, -70);
+		tr.localScale = new Vector3(1, 1);
+		tr.anchoredPosition3D = new Vector3(30, -70, 0);
 
 		// Вычисление лимита времени на текующий уровень
 		cur_lvl_limit = 1 + gmRef.level * 3;

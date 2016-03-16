@@ -54,12 +54,17 @@ public class Counter : MonoBehaviour {
 		// Если лимит исчерпан, перезапускаем уровень
 		if (sec >= cur_lvl_limit) {
 			fRef.FadeOut();
-			return;
+			// Fade out scene
+			while (fRef.is_fading_out)
+				return;
+			
 			// Для 6-8 уровней не рестартим, а динамически изменяем лабиринт
 			if (gmRef.level >= 6)
 				gmRef.RestartLevel(true);
 			else
 				gmRef.RestartLevel();
+
+			fRef.FadeIn();
 		}
 	}
 

@@ -14,12 +14,17 @@ public class GameManager : MonoBehaviour {
 	public Goal goalInstance;
 	public byte level = 1; // Текущий уровень
 
-	private Maze mazeInstance; // instance лабиринта
-	private const bool debug_c = true;
+	Maze mazeInstance; // instance лабиринта
+	const bool debug_c = true;
+	Fader fRef;
 
 	void EndGame() {
 		DeleteAll();
 		Debug.Log("Game ended!");
+	}
+
+	void Awake() {
+		fRef = GameObject.Find("Fader").GetComponent<Fader>();
 	}
 
 	void DeleteAll(bool dynamically = false) {
@@ -34,9 +39,12 @@ public class GameManager : MonoBehaviour {
 	// Точка вхождения игры
 	void Update () {
 		// По нажатию пробела запускаем игру
-		if ((Input.GetKeyDown(KeyCode.Space)) && (GameObject.Find("Maze") == null))
+		if ((Input.GetKeyDown(KeyCode.Space)) && (GameObject.Find("Maze") == null)) {
+			fRef.FadeOut();
 			CreateAll(true);
-		
+			fRef.FadeIn();
+		}
+
 		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
 			GoNextLevel();
 	}

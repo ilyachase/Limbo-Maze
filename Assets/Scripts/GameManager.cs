@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour {
 	public Bonus2 bonus2Prefab;
 	public Bonus3 bonus3Prefab;
 	public Counter counterPrefab;
-	public Canvas canvasPrefab;
 	public Circle circleInstance;  // reference на prefab персонажа
 	public Goal goalInstance;
 	public byte level = 1; // Текущий уровень
@@ -24,7 +23,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void DeleteAll(bool dynamically = false) {
-		List<string> protected_names = new List<string>(new string[] { "Game Manager", "Main Camera", "Maze", "Audio Player", "Screen Fader", "Canvas", "Fader" });
+		List<string> protected_names = new List<string>(new string[] { "Game Manager", "Main Camera", "Maze", "Audio Player", "Screen Fader", "Fader", "Canvas" });
 		if (dynamically)
 			protected_names.Add("Circle");
 		foreach (GameObject o in FindObjectsOfType<GameObject>())
@@ -124,8 +123,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void CreateCounter() {
-		var canvas = Instantiate(canvasPrefab) as Canvas;
-		canvas.name = "Canvas";
+		var canvas = Instantiate(counterPrefab) as Counter;
+		canvas.name = "Counter";
 	}
 
 	// Переход на следующий уровень

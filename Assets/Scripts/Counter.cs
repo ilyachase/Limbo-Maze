@@ -4,14 +4,22 @@ using UnityEngine.UI;
 
 public class Counter : MonoBehaviour {
 	GameManager gmRef;
+	Fader fRef;
 	int mil = 0, sec = 0;
 	int cur_lvl_limit;
 	float slow_time = 0;
 	bool skip = false;
 
 	// Use this for initialization
-	void Start () {
+	void Awake() {
 		gmRef = GameObject.Find("Game Manager").GetComponent<GameManager>();
+		fRef = GameObject.Find("Fader").GetComponent<Fader>();
+
+		transform.SetParent(GameObject.Find("Canvas").transform);
+		var tr = transform as RectTransform;
+		tr.pivot = new Vector2(0, 0);
+		tr.localScale = new Vector2(1, 1);
+		tr.anchoredPosition = new Vector2(30, -70);
 
 		// Вычисление лимита времени на текующий уровень
 		cur_lvl_limit = 1 + gmRef.level * 3;
@@ -45,6 +53,8 @@ public class Counter : MonoBehaviour {
 
 		// Если лимит исчерпан, перезапускаем уровень
 		if (sec >= cur_lvl_limit) {
+			fRef.FadeOut();
+			return;
 			// Для 6-8 уровней не рестартим, а динамически изменяем лабиринт
 			if (gmRef.level >= 6)
 				gmRef.RestartLevel(true);

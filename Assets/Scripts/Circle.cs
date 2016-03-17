@@ -133,4 +133,10 @@ public class Circle : MonoBehaviour {
 	public void Move(Vector2 new_dest) {
 		dest = new_dest;
 	}
+
+	public void DelBonuses() {
+		have_b1 = false;
+		have_b2 = false;
+		have_b3 = false;
+	}
 }

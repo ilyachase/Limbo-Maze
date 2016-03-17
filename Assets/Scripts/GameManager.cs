@@ -68,8 +68,10 @@ public class GameManager : MonoBehaviour {
 	void DeleteAll(bool dynamically = false) {
 		foreach (GameObject o in FindObjectsOfType<GameObject>())
 			if (o.tag != "Protected") {
-				if ((dynamically) && (o.name == "Circle"))
+				if ((dynamically) && (o.name == "Circle")) {
+					o.GetComponent<Circle>().DelBonuses();
 					continue;
+				}
 				Destroy(o);
 			}
 

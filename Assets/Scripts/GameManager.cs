@@ -242,6 +242,8 @@ public class GameManager : MonoBehaviour {
 
 		// Выставляем камеру
 		SetUpCam();
+
+		fRef.FadeIn();
 	}
 
 	public void RestartLevel(bool dynamically = false) {

@@ -46,6 +46,15 @@ public class Goal : MonoBehaviour {
 		while (!found);
 	}
 
+	bool need_next_level = false;
+	GameManager gmRef;
+	Fader fRef;
+
+	void Awake() {
+		gmRef = GameObject.Find("Game Manager").GetComponent<GameManager>();
+		fRef = GameObject.Find("Fader").GetComponent<Fader>();
+	}
+
 	// Use this for initialization
 	void Start () {
 		int x = 0, y = 0;
@@ -54,9 +63,20 @@ public class Goal : MonoBehaviour {
 		transform.position = new Vector2(x, y);
 	}
 
+	void Update() {
+		if (need_next_level) {
+			fRef.FadeOut();
+			GetComponent<Renderer>().enabled = false;
+			if (fRef.is_fading_out)
+				return;
+
+			gmRef.GoNextLevel();
+		}
+	}
+
 	// Переходим на следующий уровень, если нас достиг персонаж
 	void OnTriggerEnter2D(Collider2D co) {
 		if (co.name == "Circle")
-			GameObject.Find("Game Manager").GetComponent<GameManager>().GoNextLevel();
+			need_next_level = true;
 	}
 }

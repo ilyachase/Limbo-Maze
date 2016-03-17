@@ -48,7 +48,8 @@ public class Fader : MonoBehaviour {
 		}
 
 		if (is_fading_in) {
-			GameObject.Find("Counter").GetComponent<Text>().color = Color.white;
+			if (GameObject.Find("Counter"))
+				GameObject.Find("Counter").GetComponent<Text>().color = Color.white;
 			if (img.color != Color.clear) {
 				img.color = Color.Lerp(Color.black, Color.clear, t);
 				t += fadeTime;

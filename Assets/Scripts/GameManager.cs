@@ -18,14 +18,25 @@ public class GameManager : MonoBehaviour {
 
 	Maze mazeInstance; // instance лабиринта
 	const bool debug_c = true;
-	bool created = false, i1end = false, i2end = false, i3end = false, i4end = false;
+	bool created = false, i1end = false, i2end = false, i3end = false, i4end = false, need_end = false, deleted = false;
 	Fader fRef;
-	Text i1, i2, i3, i4;
+	Text i1, i2, i3, i4, outro;
 	float t = 0, wait = 0;
 
 	void EndGame() {
-		DeleteAll();
-		Debug.Log("Game ended!");
+		if (fRef.is_fading_out)
+			return;
+		
+		if (!deleted) {
+			DeleteAll();
+			deleted = true;
+		}
+
+		if (outro.color != Color.white) {
+			outro.color = Color.Lerp(Color.clear, Color.white, t);
+			t += introTextFadeTime;
+			return;
+		}
 	}
 
 	void Awake() {
@@ -34,6 +45,7 @@ public class GameManager : MonoBehaviour {
 		i2 = GameObject.Find("Intro2").GetComponent<Text>();
 		i3 = GameObject.Find("Intro3").GetComponent<Text>();
 		i4 = GameObject.Find("Intro4").GetComponent<Text>();
+		outro = GameObject.Find("Outro").GetComponent<Text>();
 	}
 
 	void DeleteAll(bool dynamically = false) {
@@ -49,6 +61,11 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
 			GoNextLevel();
+
+		if (need_end) {
+			EndGame();
+			return;
+		}
 
 		if (created)
 			return;
@@ -230,7 +247,8 @@ public class GameManager : MonoBehaviour {
 		level++;
 
 		if (level == 9) {
-			EndGame();
+			fRef.FadeOut();
+			need_end = true;
 			return;
 		}
 

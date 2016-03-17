@@ -17,10 +17,11 @@ public class GameManager : MonoBehaviour {
 	public float introTextFadeTime;
 
 	Maze mazeInstance; // instance лабиринта
-	const bool debug_c = true;
+	const bool debug_c = false;
 	bool created = false, i1end = false, i2end = false, i3end = false, i4end = false, need_end = false, deleted = false;
 	Fader fRef;
 	Text i1, i2, i3, i4, outro;
+	GameObject b1, b2, b3;
 	float t = 0, wait = 0;
 
 	void EndGame() {
@@ -39,6 +40,16 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	void HideAllBonusesText() {
+		b1.GetComponent<Image>().enabled = false;
+		b2.GetComponent<Image>().enabled = false;
+		b3.GetComponent<Image>().enabled = false;
+		GameObject.Find("Bonuses").GetComponent<Text>().color = Color.clear;
+		GameObject.Find("Bonus1_tip").GetComponent<Text>().color = Color.clear;
+		GameObject.Find("Bonus2_tip").GetComponent<Text>().color = Color.clear;
+		GameObject.Find("Bonus3_tip").GetComponent<Text>().color = Color.clear;
+	}
+
 	void Awake() {
 		fRef = GameObject.Find("Fader").GetComponent<Fader>();
 		i1 = GameObject.Find("Intro1").GetComponent<Text>();
@@ -46,6 +57,12 @@ public class GameManager : MonoBehaviour {
 		i3 = GameObject.Find("Intro3").GetComponent<Text>();
 		i4 = GameObject.Find("Intro4").GetComponent<Text>();
 		outro = GameObject.Find("Outro").GetComponent<Text>();
+		
+		b1 = GameObject.Find("Bonus1_icon");
+		b2 = GameObject.Find("Bonus2_icon");
+		b3 = GameObject.Find("Bonus3_icon");
+
+		HideAllBonusesText();
 	}
 
 	void DeleteAll(bool dynamically = false) {
@@ -55,12 +72,17 @@ public class GameManager : MonoBehaviour {
 					continue;
 				Destroy(o);
 			}
+
+		HideAllBonusesText();
 	}
 
 	// Точка вхождения игры
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
 			GoNextLevel();
+
+		if (Input.GetKeyDown(KeyCode.R) && debug_c)
+			RestartLevel(true);
 
 		if (need_end) {
 			EndGame();
@@ -69,6 +91,14 @@ public class GameManager : MonoBehaviour {
 
 		if (created)
 			return;
+
+		if (debug_c) {
+			i1.color = Color.white;
+			i2.color = Color.white;
+			i3.color = Color.white;
+			i4.color = Color.white;
+			wait = 10;
+		}
 
 		// По очереди показываем строки интро
 		if ((wait < 1) && (i1.color == Color.clear)) {

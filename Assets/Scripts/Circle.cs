@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Circle : MonoBehaviour {
 	public Goal goalPrefab;
@@ -33,6 +34,13 @@ public class Circle : MonoBehaviour {
 		// Move closer to Destination
 		Vector2 p = Vector2.MoveTowards(transform.position, dest, speed);
 		GetComponent<Rigidbody2D>().MovePosition(p);
+
+		if (!have_b1)
+			GameObject.Find("Bonus1_icon").GetComponent<Image>().enabled = false;
+		if (!have_b2)
+			GameObject.Find("Bonus2_icon").GetComponent<Image>().enabled = false;
+		if (!have_b3)
+			GameObject.Find("Bonus3_icon").GetComponent<Image>().enabled = false;
 
 		// Активация бонусов
 		if (Input.GetKey(KeyCode.LeftShift)) {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Bonus2 : MonoBehaviour {
 
@@ -20,6 +21,10 @@ public class Bonus2 : MonoBehaviour {
 			var cir = GameObject.Find("Circle").GetComponent<Circle>();
 			cir.AddBonus(2);
 			Destroy(gameObject);
+			GameObject.Find("Bonuses").GetComponent<Text>().color = Color.white;
+			GameObject.Find("Bonus2_icon").GetComponent<Image>().enabled = true;
+			if (GameObject.Find("Game Manager").GetComponent<GameManager>().level == 5)
+				GameObject.Find("Bonus2_tip").GetComponent<Bonus2_tip>().Show();
 		}
 	}
 }

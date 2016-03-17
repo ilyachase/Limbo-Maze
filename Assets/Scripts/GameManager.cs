@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 	public Maze mazePrefab; // reference на prefab лабиринта
@@ -13,10 +14,14 @@ public class GameManager : MonoBehaviour {
 	public Circle circleInstance;  // reference на prefab персонажа
 	public Goal goalInstance;
 	public byte level = 1; // Текущий уровень
+	public float introTextFadeTime;
 
 	Maze mazeInstance; // instance лабиринта
 	const bool debug_c = true;
+	bool created = false, i1end = false, i2end = false, i3end = false, i4end = false;
 	Fader fRef;
+	Text i1, i2, i3, i4;
+	float t = 0, wait = 0;
 
 	void EndGame() {
 		DeleteAll();
@@ -25,6 +30,10 @@ public class GameManager : MonoBehaviour {
 
 	void Awake() {
 		fRef = GameObject.Find("Fader").GetComponent<Fader>();
+		i1 = GameObject.Find("Intro1").GetComponent<Text>();
+		i2 = GameObject.Find("Intro2").GetComponent<Text>();
+		i3 = GameObject.Find("Intro3").GetComponent<Text>();
+		i4 = GameObject.Find("Intro4").GetComponent<Text>();
 	}
 
 	void DeleteAll(bool dynamically = false) {
@@ -38,15 +47,96 @@ public class GameManager : MonoBehaviour {
 
 	// Точка вхождения игры
 	void Update () {
-		// По нажатию пробела запускаем игру
-		if ((Input.GetKeyDown(KeyCode.Space)) && (GameObject.Find("Maze") == null)) {
-			fRef.FadeOut();
-			CreateAll(true);
-			fRef.FadeIn();
-		}
-
 		if (Input.GetKeyDown(KeyCode.Tab) && debug_c)
 			GoNextLevel();
+
+		if (created)
+			return;
+
+		// По очереди показываем строки интро
+		if ((wait < 1) && (i1.color == Color.clear)) {
+			wait += Time.deltaTime;
+			return;
+		}
+
+		if (i1.color != Color.white) {
+			i1.color = Color.Lerp(Color.clear, Color.white, t);
+			t += introTextFadeTime;
+			return;
+		}
+		else if (!i1end) {
+			i1end = true;
+			t = 0;
+			wait = 0;
+		}
+
+		if ((wait < 1) && (i2.color == Color.clear)) {
+			wait += Time.deltaTime;
+			return;
+		}
+
+		if (i2.color != Color.white) {
+			i2.color = Color.Lerp(Color.clear, Color.white, t);
+			t += introTextFadeTime;
+			return;
+		}
+		else if (!i2end) {
+			i2end = true;
+			t = 0;
+			wait = 0;
+		}
+
+		if ((wait < 1) && (i3.color == Color.clear)) {
+			wait += Time.deltaTime;
+			return;
+		}
+
+		if (i3.color != Color.white) {
+			i3.color = Color.Lerp(Color.clear, Color.white, t);
+			t += introTextFadeTime;
+			return;
+		}
+		else if (!i3end) {
+			i3end = true;
+			t = 0;
+			wait = 0;
+		}
+
+		if ((wait < 1) && (i4.color == Color.clear)) {
+			wait += Time.deltaTime;
+			return;
+		}
+
+		if (i4.color != Color.white) {
+			i4.color = Color.Lerp(Color.clear, Color.white, t);
+			t += introTextFadeTime;
+			return;
+		}
+		else if (!i4end) {
+			i4end = true;
+			t = 0;
+			wait = 0;
+		}
+
+		if (wait < 3) {
+			wait += Time.deltaTime;
+			return;
+		}
+
+		fRef.fadeTime = 0.01f;
+		fRef.FadeOut();
+		if (fRef.is_fading_out)
+			return;
+
+		i1.color = Color.clear;
+		i2.color = Color.clear;
+		i3.color = Color.clear;
+		i4.color = Color.clear;
+
+		CreateAll(true);
+		fRef.FadeIn();
+		fRef.fadeTime = 0.05f;
+		created = true;
 	}
 
 	void SetUpCam() {

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Fader : MonoBehaviour {
 	public bool is_fading_out = false, is_fading_in = false;
-	public float fadeTime = 0.5f;
+	public float fadeTime;
 
 	RectTransform tr;
 	Image img;
